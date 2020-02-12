@@ -6,8 +6,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 const db = require("./database/mySQL");
-db
-  .authenticate()
+db.authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
   })
@@ -19,11 +18,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-
-
 require("./routes/userRoutes")(app);
 require("./routes/chatRoutes")(app);
-
 
 app.listen(PORT, () => {
   console.log(`server is up on port ${PORT}`);

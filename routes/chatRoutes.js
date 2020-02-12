@@ -1,11 +1,7 @@
-// const { sequelize } = require("../database/mySQL");
-
-// sequelize.import("../database/models/User.js");
-// const Message = sequelize.import("../database/models/Message.js");
-const Message = require("../database/models/Message")
+const Message = require("../database/models/Message");
 const requireId = require("../middlewares/requireId");
-const User = require("../database/models/User")
-Message.belongsTo(User, {foreignKey: "createdBy"})
+const User = require("../database/models/User");
+Message.belongsTo(User, { foreignKey: "createdBy" });
 
 module.exports = app => {
   //POST// SendMessage
@@ -25,16 +21,27 @@ module.exports = app => {
   });
 
   //GET// getMessages
-  app.get("/api/messages/getLastMessages/:numberOfMessagesToRetrive/:userId", requireId, async (req, res) => {
-    const limit = parseInt(req.params.numberOfMessagesToRetrive) || 10 
-    console.log("limit is: " + limit)
-    try {
-      const result = await Message.findAll({include: [{model: User}], limit, order: ["createdAt"]})
+  app.get(
+    "/api/messages/getLastMessages/:numberOfMessagesToRetrive/:userId",
+    requireId,
+    async (req, res) => {
+      const limit = parseInt(req.params.numberOfMessagesToRetrive) || 10;
+      try {
+        const result = await Message.findAll({
+          include: [{ model: User }],
+          limit,
+          order: ["createdAt"]
+        });
 
-      res.status(202).send({messages:result})
-    } catch (error) {
-      console.log("error in getLastMessages: unable to retrive messages : " + error)
-      res.status(400).send({error: "error in getLastMessages: unable to retrive messages "})
+        res.status(202).send({ messages: result });
+      } catch (error) {
+        console.log(
+          "error in getLastMessages: unable to retrive messages : " + error
+        );
+        res.status(400).send({
+          error: "error in getLastMessages: unable to retrive messages "
+        });
+      }
     }
-  })
+  );
 };

@@ -1,9 +1,4 @@
-const { sequelize } = require("../database/mySQL");
-// const User = sequelize.import("../database/models/User.js");
-// const Message = sequelize.import("../database/models/Message.js");
-const User = require("../database/models/User")
-
-
+const User = require("../database/models/User");
 const requireName = require("../middlewares/requireName");
 const requireId = require("../middlewares/requireId");
 
@@ -35,12 +30,10 @@ module.exports = app => {
           "error in findAndUpdateOrCreate:: unable to find or create or update user: " +
             error
         );
-        res
-          .status(400)
-          .send({
-            error:
-              "error in findAndUpdateOrCreate:: unable to find/create/update user"
-          });
+        res.status(400).send({
+          error:
+            "error in findAndUpdateOrCreate:: unable to find/create/update user"
+        });
       }
     }
   );
@@ -58,12 +51,9 @@ module.exports = app => {
         "error in updateUserToOffline:: unable to update user to offline: " +
           error
       );
-      res
-        .status(400)
-        .send({
-          error:
-            "error in updateUserToOffline:: unable to update user to offline"
-        });
+      res.status(400).send({
+        error: "error in updateUserToOffline:: unable to update user to offline"
+      });
     }
   });
 
@@ -82,12 +72,10 @@ module.exports = app => {
           "error in getOnlineUsersAndCount:: unable to find and count online users: " +
             error
         );
-        res
-          .status(400)
-          .send({
-            error:
-              "error in getOnlineUsersAndCount:: unable to find and count online users"
-          });
+        res.status(400).send({
+          error:
+            "error in getOnlineUsersAndCount:: unable to find and count online users"
+        });
       }
     }
   );
