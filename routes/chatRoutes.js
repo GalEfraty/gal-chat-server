@@ -30,7 +30,7 @@ module.exports = app => {
         const result = await Message.findAll({
           include: [{ model: User }],
           limit,
-          order: ["createdAt"]
+          order: [["id", "DESC"]]
         });
 
         res.status(202).send({ messages: result });
