@@ -1,17 +1,40 @@
-const requireLogin = require("../middlewares/requireLogin");
+// const { sequelize } = require("../database/mySQL");
 
-const keys = require("../config/keys")
+// sequelize.import("../database/models/User.js");
+// const Message = sequelize.import("../database/models/Message.js");
+const Message = require("../database/models/Message")
+const requireId = require("../middlewares/requireId");
+const User = require("../database/models/User")
+Message.belongsTo(User, {foreignKey: "createdBy"})
 
 module.exports = app => {
-    // app.get("/api/hello", (req, res) => {
+  //POST// SendMessage
+  app.post("/api/messages/sendmessage/:userId", requireId, async (req, res) => {
+    try {
+      await Message.create({
+        createdBy: req.params.userId,
+        content: req.body.content
+      });
+      res.status(201).send({ message: "message created" });
+    } catch (error) {
+      console.log("error in sendmessage:: unable to send message : " + error);
+      res
+        .status(400)
+        .send({ error: "error in sendmessage:: unable to send message" });
+    }
+  });
 
-    //     console.log(`hello ${keys.someConfigVar}`)
-    //     res.status(200).send({message: `hello back from server ${keys.someConfigVar}`})
-    // })
+  //GET// getMessages
+  app.get("/api/messages/getLastMessages/:numberOfMessagesToRetrive/:userId", requireId, async (req, res) => {
+    const limit = parseInt(req.params.numberOfMessagesToRetrive) || 10 
+    console.log("limit is: " + limit)
+    try {
+      const result = await Message.findAll({include: [{model: User}], limit, order: ["createdAt"]})
 
-    app.get("/api/hello", (req, res) => {
-
-        console.log(`hello ${keys.someConfigVar}`)
-        res.status(200).send({message: `hello back from server ${keys.someConfigVar}`})
-    })
-}
+      res.status(202).send({messages:result})
+    } catch (error) {
+      console.log("error in getLastMessages: unable to retrive messages : " + error)
+      res.status(400).send({error: "error in getLastMessages: unable to retrive messages "})
+    }
+  })
+};
