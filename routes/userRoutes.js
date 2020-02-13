@@ -10,20 +10,19 @@ module.exports = app => {
     requireName,
     async (req, res) => {
       try {
-        const result = await User.findOne({
+        const existingUser = await User.findOne({
           where: { name: req.params.userName }
         });
-        if (!result) {
+        if (!existingUser) {
           const newUser = await User.create({
             name: req.params.userName,
             online: true
           });
           return res.status(201).send({ user: newUser.dataValues });
         } else {
-          console.log("existing user");
-          await User.update({ onliAne: true }, { where: { id: result.id } });
-          const existingUser = await User.findOne({ where: { id: result.id } });
-          return res.status(202).send({ user: existingUser.dataValues });
+          existingUser.online = true;
+          await existingUser.save();
+          return res.status(202).send({ user: existingUser });
         }
       } catch (error) {
         console.log(
@@ -89,5 +88,4 @@ module.exports = app => {
     }
     return res.status(200).send({ available: true });
   });
-
 };
