@@ -1,3 +1,5 @@
+const User = require("../database/models/User");
+
 module.exports = (req, res, next) => {
   if (!req.params.userId) {
     return res

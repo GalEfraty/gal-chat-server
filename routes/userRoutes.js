@@ -80,12 +80,31 @@ module.exports = app => {
   );
 
   app.get("/api/users/isUserAvailable/:userName", async (req, res) => {
-    const result = await User.findOne({
-      where: { name: req.params.userName, online: true }
-    });
-    if (result) {
-      return res.status(200).send({ available: false });
+    try {
+      const result = await User.findOne({
+        where: { name: req.params.userName, online: true }
+      });
+      if (result) {
+        return res.status(200).send({ available: false });
+      }
+      return res.status(200).send({ available: true });
+    } catch (error) {
+      console.log("error in isUserAvailable: ", error);
+      res
+        .status(400)
+        .send({ error: "isUserAvailable unable to find user by name" });
     }
-    return res.status(200).send({ available: true });
+  });
+
+  app.get("/api/users/findUser/:userId", async (req, res) => {
+    try {
+      const result = await User.findOne({
+        where: { id: req.params.userId, online: true }
+      });
+      res.status(200).send(result)
+    } catch (error) {
+      console.log("error in findUser: unable to find user: ", error);
+      res.status(400).send({ error: "error in findUser: unable to find user" });
+    }
   });
 };
