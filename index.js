@@ -20,6 +20,9 @@ app.use(cors());
 
 require("./routes/userRoutes")(app);
 require("./routes/chatRoutes")(app);
+app.get("/", (req, res) => {
+  res.redirect("https://gal-chat-client.herokuapp.com");
+});
 
 app.listen(PORT, () => {
   console.log(`server is up on port ${PORT}`);
