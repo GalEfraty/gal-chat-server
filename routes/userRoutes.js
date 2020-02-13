@@ -79,4 +79,15 @@ module.exports = app => {
       }
     }
   );
+
+  app.get("/api/users/isUserAvailable/:userName", async (req, res) => {
+    const result = await User.findOne({
+      where: { name: req.params.userName, online: true }
+    });
+    if (result) {
+      return res.status(401).send({ available: false });
+    }
+    return res.status(200).send({ available: true });
+  });
+
 };
